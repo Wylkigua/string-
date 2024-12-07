@@ -4,15 +4,133 @@
 #include "s.h"
 
 void test(void);
+/*
+int main(void) {
+	char s1[] = "--  -hi.-.frie  nd$$$-ok(((((((hel  lo))---ok....l!w", *p1 = NULL;
+	char s2[] = "--  -hi.-.frie  nd$$$-ok(((((((hel  lo))---ok....l!w", *p2 = NULL;
+	char sep[] = "-.()!$r d";
+	int brk, sccs, cmp;
+	p1 = s21_strtok(s1, sep);
+	p2 = strtok(s2, sep);
+	sccs = !(brk = (p1 && p2) ? 0 : 1);
+	while (!brk) {
+		p1 = s21_strtok(NULL, sep);
+		p2 = strtok(NULL, sep);
+		if (p1 && p2) {
+			printf("%s %s\n", p1, p2);
+			cmp = strcmp(p1, p2);
+			sccs = !(brk = (cmp == 0) ? 0 : 1);
+		} else if ((p1 && !p2) || (!p1 && p2)) {
+			sccs = !(brk = 1);
+		} else {
+			sccs = brk = 1;
+		}
+	}
+	printf("%d\n", sccs);
+}
+*/
 
 int main(void) {
-	const char s[] = "hel \0 lk";
+	char s[] = "mississippi";
+	//char s[] = "mississippi";
+	//char c[] = "ss";
+	char c[] = "ppi";
+	char *p = s21_strstr(s, c);
+	printf("%c\n", *p);
+}
+
+char *s21_strtok(char *str, const char *sep) {
+	static char *prev = NULL;
+	char *ps = str;
+	if (str == NULL) {
+		if (prev == NULL || *prev == '\0') return (NULL);
+		ps = prev;
+	}
+	char *pt = NULL;
+	int l, r, brk, srh, first;
+	r = l = first = srh = brk = 0;
+
+	for (; !brk && *(ps + l) != '\0'; l++) {
+		for (r = srh = 0; !srh && *(ps+l) != '\0'; r++) {
+			if (*(sep+r) != '\0' && *(ps+l) == *(sep+r)) {
+				*(ps+l) = '\0';
+			} else if (*(sep+r) == '\0') srh = 1;
+		}
+		if (*(ps+l) == '\0' && first) {
+				brk = 1;
+		} else if (*(ps+l) != '\0') {
+			if (!first) pt = ps + l;
+			first++;
+		}
+	}
+	prev = ps + l;
+	return ((char*)pt);
+}
+/*
+int main(void) {
+	char s[] = "glllh.....elk.lk..xc";
+	//char s[] = "gghg.w";
+	char d[] = "lx.";
+	char *p = NULL;
+	p = strtok(s, d);
+	while (p != NULL) {
+		printf("%s\n", p);
+		p = strtok(NULL, d);
+	}
+	printf("---------------------\n");
+	char s1[] = "glllh....elk.lk..xc";
+	//char s1[] = "gghg.w";
+	char d1[] = "lx.";
+	char *p1 = NULL;
+	p1 = s21_strtok(s1, d1);
+	while (p1 != NULL) {
+		printf("%s\n", p1);
+		p1 = s21_strtok(NULL, d1);
+	}
+
+	p = strtok(s, d);
+	printf("%s - %p\n", p, p);
+	p = strtok(NULL, d);
+	printf("%s - %p\n", p, p);
+	p = strtok(NULL, d);
+	printf("%s - %p\n", p, p);
+	p = strtok(NULL, d);
+	printf("%s - %p\n\n", p, p);
+
+	p1 = s21_strtok(s1, d1);
+	printf("%s - %p\n", p1, p1);
+	p1 = s21_strtok(NULL, d1);
+	printf("%s - %p\n", p1, p1);
+	p1 = s21_strtok(NULL, d1);
+	printf("%s - %p\n", p1, p1);
+	p1 = s21_strtok(NULL, d1);
+	printf("%s - %p\n", p1, p1);
+	p1 = s21_strtok(NULL, d1);
+	printf("%s - %p\n", p1, p1);
+	p1 = s21_strtok(NULL, d1);
+	printf("%s - %p\n", p1, p1);
+
+}
+*/
+//  char s[] = "mississippi";
+//	char c[] = "issip";
+
+char *s21_strstr(const char *str, const char *sub) {
+	int l, r, f;
 	const char *p = NULL;
-	p = strrchr(s, '\0');
-	printf("%p %p\n", p, &s[3]);
-	
-	p = s21_strrchr(s, '\0');
-	printf("%p %p\n", p, &s[3]);
+	for (f = 1, l = r = 0; f && *(str+l); ++l) {
+		if (*(str+l) == *(sub+r)) {
+			++r;
+			if (!*(sub+r)) {
+				p = str + l - r + 1;
+				f = 0;
+			}
+		} else if (r) {
+			l -= r;
+			r = 0;
+		}
+	}
+	return ((char*)p);
 }
 
 char *s21_strrchr(const char *s, int c) {
@@ -70,6 +188,14 @@ void *s21_memchr(const void *arr, int c, size_t n) {
 /*
 void test(void) {
 
+	const char str[] = "hell";
+	const char sub[] = "1";
+	const char *p = NULL;
+	p = strstr(str, sub);
+	printf("%p %p\n", p, &str[3]);
+	
+	p = s21_strstr(str, sub);
+	printf("%p %p\n", p, &str[3]);
 	
 	const char *s1 = "Hello";
 	const char *s2 = "o";
